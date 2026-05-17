@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roblox Group Sniper</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 950px;
+      background: #111827;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 0;
+      color: #38bdf8;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      font-size: 15px;
+    }
+
+    input {
+      background: #1e293b;
+      color: white;
+    }
+
+    button {
+      background: #0ea5e9;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #0284c7;
+    }
+
+    .stop {
+      background: #ef4444;
+    }
+
+    .stop:hover {
+      background: #dc2626;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      flex: 1;
+      min-width: 160px;
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 28px;
+      color: #38bdf8;
+    }
+
+    .log {
+      background: #020617;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      height: 500px;
+      overflow-y: auto;
+      padding: 15px;
+      font-family: monospace;
+    }
+
+    .found {
+      color: #22c55e;
+      margin-bottom: 8px;
+    }
+
+    .taken {
+      color: #f87171;
+      margin-bottom: 8px;
+    }
+
+    .info {
+      color: #facc15;
+      margin-bottom: 8px;
+    }
+
+    .footer {
+      margin-top: 15px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Roblox Group Sniper</h1>
+
+    <div class="controls">
+      <input type="number" id="startId" placeholder="Start ID" value="1">
+      <input type="number" id="delay" placeholder="Delay (ms)" value="250">
+      <button onclick="startSniper()">Start</button>
+      <button class="stop" onclick="stopSniper()">Stop</button>
+    </div>
+
+    <div class="stats">
+      <div class="card">
+        <div>Checked</div>
+        <h2 id="checked">0</h2>
+      </div>
+
+      <div class="card">
+        <div>Possible Free</div>
+        <h2 id="free">0</h2>
+      </div>
+
+      <div class="card">
+        <div>Current ID</div>
+        <h2 id="current">0</h2>
+      </div>
+    </div>
+
+    <div class="log" id="log"></div>
+
+    <div class="footer">
+      API Base URL: https://groupapi.infodmca.com/
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'https://groupapi.infodmca.com/api/check?id=';
+
+    let running = false;
+    let checked = 0;
+    let free = 0;
+
+    function addLog(text, className) {
+      const log = document.getElementById('log');
+      const div = document.createElement('div');
+      div.className = className;
+      div.innerHTML = text;
+      log.prepend(div);
+    }
+
+    function updateStats(id) {
+      document.getElementById('checked').textContent = checked;
+      document.getElementById('free').textContent = free;
+      document.getElementById('current').textContent = id;
+    }
+
+    async function checkGroup(id) {
+      try {
+        const response = await fetch(API_BASE + id);
+        const data = await response.json();
+
+        if (data.exists) {
+          addLog(`❌ ${id} TAKEN → ${data.name}`, 'taken');
+        } else {
+          free++;
+          addLog(`✅ ${id} POSSIBLY FREE`, 'found');
+        }
+      } catch (err) {
+        addLog(`⚠ Error checking ${id}: ${err.message}`, 'info');
+      }
+    }
+
+    async function startSniper() {
+      if (running) return;
+
+      running = true;
+
+      let id = parseInt(document.getElementById('startId').value) || 1;
+      const delay = parseInt(document.getElementById('delay').value) || 250;
+
+      addLog('🚀 Started scanner...', 'info');
+
+      while (running) {
+        checked++;
+        updateStats(id);
+
+        await checkGroup(id);
+
+        id++;
+
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+
+    function stopSniper() {
+      running = false;
+      addLog('🛑 Scanner stopped.', 'info');
+    }
+  </script>
+</body>
+</html>
