@@ -4,32 +4,40 @@ export default async function handler(req, res) {
   if (!id) {
     return res.status(400).json({
       success: false,
-      error: 'Missing group ID'
+      error: "Missing group ID"
     });
   }
 
   try {
-    const response = await fetch(`https://groups.roblox.com/v1/groups/${id}`);
+    const response = await fetch(
+      `https://groups.roblox.com/v1/groups/${id}`
+    );
 
-    if (response.ok) {
-      const data = await response.json();
-
+    // Group does not exist
+    if (!response.ok) {
       return res.status(200).json({
         success: true,
-        exists: true,
-        id: data.id,
-        name: data.name,
-        owner: data.owner?.username || null,
-        members: data.memberCount,
-        publicEntryAllowed: data.publicEntryAllowed
+        exists: false,
+        unowned: false,
+        deleted: true,
+        id
       });
     }
 
+    const data = await response.json();
+
+    const hasOwner = !!data.owner;
+
     return res.status(200).json({
       success: true,
-      exists: false,
-      id
+      exists: true,
+      id: data.id,
+      name: data.name,
+      owner: hasOwner ? data.owner.username : null,
+      unowned: !hasOwner,
+      members: data.memberCount
     });
+
   } catch (err) {
     return res.status(500).json({
       success: false,
