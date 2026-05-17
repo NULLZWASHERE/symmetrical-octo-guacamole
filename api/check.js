@@ -28,6 +28,9 @@ export default async function handler(req, res) {
 
     const hasOwner = !!data.owner;
 
+    // "Locked" = not publicly joinable
+    const locked = data.publicEntryAllowed === false;
+
     return res.status(200).json({
       success: true,
       exists: true,
@@ -35,7 +38,11 @@ export default async function handler(req, res) {
       name: data.name,
       owner: hasOwner ? data.owner.username : null,
       unowned: !hasOwner,
-      members: data.memberCount
+      members: data.memberCount,
+
+      // new field
+      locked,
+      publicEntryAllowed: data.publicEntryAllowed ?? null
     });
 
   } catch (err) {
