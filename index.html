@@ -1,282 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Roblox Unowned Group Scanner</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roblox Group Scanner</title>
   <style>
-    *{
-      box-sizing:border-box;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0f0f13;
+      color: #e0e0e0;
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
     }
 
-    body{
-      margin:0;
-      background:#0f172a;
-      color:white;
-      font-family:Arial,sans-serif;
-      padding:20px;
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
     }
 
-    .container{
-      max-width:1000px;
-      margin:auto;
-      background:#111827;
-      border-radius:18px;
-      padding:25px;
-      box-shadow:0 0 25px rgba(0,0,0,.4);
+    header {
+      text-align: center;
+      margin-bottom: 30px;
     }
 
-    h1{
-      margin-top:0;
-      text-align:center;
-      color:#38bdf8;
+    h1 {
+      color: #00ff9d;
+      margin: 0;
+      font-size: 2.5rem;
+      text-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
     }
 
-    .controls{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-      gap:12px;
-      margin-bottom:20px;
+    .subtitle {
+      color: #888;
+      margin-top: 8px;
     }
 
-    input,button{
-      padding:12px;
-      border:none;
-      border-radius:12px;
-      font-size:15px;
+    .controls {
+      background: #1a1a22;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #333;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: end;
     }
 
-    input{
-      background:#1e293b;
-      color:white;
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    button{
-      background:#0ea5e9;
-      color:white;
-      cursor:pointer;
-      font-weight:bold;
+    label {
+      font-size: 0.9rem;
+      color: #aaa;
     }
 
-    button:hover{
-      background:#0284c7;
+    input {
+      background: #25252e;
+      border: 1px solid #444;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      width: 180px;
     }
 
-    .stop{
-      background:#ef4444;
+    button {
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .stop:hover{
-      background:#dc2626;
+    .btn-start {
+      background: #00ff9d;
+      color: black;
     }
 
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-      gap:12px;
-      margin-bottom:20px;
+    .btn-start:hover {
+      background: #00cc7a;
+      transform: translateY(-2px);
     }
 
-    .card{
-      background:#1e293b;
-      padding:16px;
-      border-radius:14px;
-      text-align:center;
+    .btn-stop {
+      background: #ff3b5c;
+      color: white;
     }
 
-    .card h2{
-      margin:8px 0 0;
-      color:#38bdf8;
-      font-size:28px;
+    .btn-stop:hover {
+      background: #e02e4d;
+      transform: translateY(-2px);
     }
 
-    .log{
-      background:#020617;
-      border:1px solid #334155;
-      border-radius:14px;
-      padding:15px;
-      height:500px;
-      overflow-y:auto;
-      font-family:monospace;
-      font-size:14px;
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
     }
 
-    .found{
-      color:#22c55e;
-      margin-bottom:8px;
+    .stat-card {
+      background: #1a1a22;
+      padding: 18px;
+      border-radius: 12px;
+      border: 1px solid #333;
+      text-align: center;
     }
 
-    .taken{
-      color:#f87171;
-      margin-bottom:8px;
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #00ff9d;
     }
 
-    .deleted{
-      color:#facc15;
-      margin-bottom:8px;
+    .stat-label {
+      color: #888;
+      font-size: 0.9rem;
+      margin-top: 4px;
     }
 
-    .info{
-      color:#94a3b8;
-      margin-bottom:8px;
+    #log {
+      background: #0a0a0d;
+      border: 1px solid #333;
+      border-radius: 12px;
+      height: 500px;
+      overflow-y: auto;
+      padding: 15px;
+      font-family: monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
     }
 
-    a{
-      color:#38bdf8;
+    .log-entry {
+      margin-bottom: 6px;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .info {
+      color: #aaa;
+    }
+
+    .found {
+      background: rgba(0, 255, 157, 0.1);
+      color: #00ff9d;
+      border-left: 4px solid #00ff9d;
+    }
+
+    .deleted {
+      color: #ff3b5c;
+    }
+
+    a {
+      color: #00ccff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #555;
+      font-size: 0.85rem;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <h1>Group Scanner</h1>
+      <p class="subtitle">Ultra-fast Roblox group unowned finder</p>
+    </header>
 
-<div class="container">
-  <h1>Roblox Unowned Group Scanner</h1>
+    <div class="controls">
+      <div class="input-group">
+        <label for="startId">Starting Group ID</label>
+        <input type="number" id="startId" value="1" placeholder="1">
+      </div>
 
-  <div class="controls">
-    <input type="number" id="startId" value="1" placeholder="Start ID">
-    <input type="number" id="delay" value="250" placeholder="Delay ms">
+      <div class="input-group">
+        <label for="threads">Threads</label>
+        <input type="number" id="threads" value="50" placeholder="50">
+      </div>
 
-    <button onclick="startScanner()">
-      Start
-    </button>
+      <div>
+        <button onclick="startScanner()" class="btn-start">▶ Start Scanner</button>
+        <button onclick="stopScanner()" class="btn-stop" style="margin-left: 10px;">⏹ Stop</button>
+      </div>
+    </div>
 
-    <button class="stop" onclick="stopScanner()">
-      Stop
-    </button>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value" id="checked">0</div>
+        <div class="stat-label">Checked</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="unowned">0</div>
+        <div class="stat-label">Unowned Found</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="current">1</div>
+        <div class="stat-label">Current ID</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="speed">0/s</div>
+        <div class="stat-label">Speed</div>
+      </div>
+    </div>
+
+    <h2 style="margin: 15px 0 10px 5px; color: #ccc;">Live Log</h2>
+    <div id="log"></div>
+
+    <div class="footer">
+      Made with ❤️ • For educational purposes
+    </div>
   </div>
 
-  <div class="stats">
-    <div class="card">
-      Checked
-      <h2 id="checked">0</h2>
-    </div>
+  <script>
+    const API = "https://groupapi.infodmca.com/api/check?id=";
+    let running = false;
+    let checked = 0;
+    let unowned = 0;
+    let currentId = 1;
+    let cps = 0;
 
-    <div class="card">
-      Unowned
-      <h2 id="unowned">0</h2>
-    </div>
-
-    <div class="card">
-      Current ID
-      <h2 id="current">0</h2>
-    </div>
-  </div>
-
-  <div class="log" id="log"></div>
-</div>
-
-<script>
-const API = "https://groupapi.infodmca.com/api/check?id=";
-
-let running = false;
-let checked = 0;
-let unowned = 0;
-
-function addLog(text, cls="info"){
-  const log = document.getElementById("log");
-
-  const div = document.createElement("div");
-  div.className = cls;
-  div.innerHTML = text;
-
-  log.prepend(div);
-}
-
-function updateStats(id){
-  document.getElementById("checked").textContent = checked;
-  document.getElementById("unowned").textContent = unowned;
-  document.getElementById("current").textContent = id;
-}
-
-async function checkGroup(id){
-
-  try{
-
-    const res = await fetch(API + id);
-    const data = await res.json();
-
-    if(data.unowned){
-
-      unowned++;
-
-      addLog(
-        `✅ UNOWNED → 
-        <a href="https://www.roblox.com/groups/${id}" target="_blank">
-          ${data.name}
-        </a> 
-        (#${id})`,
-        "found"
-      );
-
-    } else if(data.exists){
-
-      addLog(
-        `❌ TAKEN → ${data.name} (#${id})`,
-        "taken"
-      );
-
-    } else {
-
-      addLog(
-        `⚠ DELETED / INVALID (#${id})`,
-        "deleted"
-      );
-
+    function log(text, cls="info") {
+      const el = document.createElement("div");
+      el.className = `log-entry ${cls}`;
+      el.innerHTML = text;
+      const logs = document.getElementById("log");
+      logs.prepend(el);
+      
+      while (logs.children.length > 300) {
+        logs.removeChild(logs.lastChild);
+      }
     }
 
-  } catch(err){
+    function update() {
+      document.getElementById("checked").textContent = checked.toLocaleString();
+      document.getElementById("unowned").textContent = unowned.toLocaleString();
+      document.getElementById("current").textContent = currentId.toLocaleString();
+    }
 
-    addLog(
-      `⚠ ERROR ${id}: ${err.message}`,
-      "deleted"
-    );
+    setInterval(() => {
+      document.getElementById("speed").textContent = cps + "/s";
+      cps = 0;
+    }, 1000);
 
-  }
+    async function check(id) {
+      try {
+        const r = await fetch(API + id);
+        const data = await r.json();
+        
+        checked++;
+        cps++;
+        
+        if (data.unowned) {
+          unowned++;
+          log(
+            `✅ UNOWNED → 
+            <a href="https://www.roblox.com/groups/${id}" target="_blank">
+              ${data.name || 'Unnamed Group'}
+            </a> 
+            (#${id})`,
+            "found"
+          );
+        }
+        update();
+      } catch (e) {
+        // Silently ignore errors for maximum speed
+      }
+    }
 
-}
+    async function thread() {
+      while (running) {
+        const batch = [];
+        for (let i = 0; i < 100; i++) {
+          const id = currentId++;
+          batch.push(check(id));
+        }
+        await Promise.allSettled(batch);
+      }
+    }
 
-async function startScanner(){
+    function startScanner() {
+      if (running) return;
+      
+      running = true;
+      checked = 0;
+      unowned = 0;
+      
+      const startInput = parseInt(document.getElementById("startId").value);
+      currentId = isNaN(startInput) ? 1 : startInput;
+      
+      const threadCount = parseInt(document.getElementById("threads").value) || 50;
+      
+      log(`🚀 Started <strong>${threadCount}</strong> ultra-fast threads`, "info");
+      
+      for (let i = 0; i < threadCount; i++) {
+        thread();
+      }
+    }
 
-  if(running) return;
+    function stopScanner() {
+      running = false;
+      log("🛑 Scanner stopped", "deleted");
+    }
 
-  running = true;
+    // Allow pressing Enter to start
+    document.addEventListener("keypress", (e) => {
+      if (e.key === "Enter" && !running) {
+        startScanner();
+      }
+    });
 
-  let id = parseInt(
-    document.getElementById("startId").value
-  ) || 1;
-
-  const delay = parseInt(
-    document.getElementById("delay").value
-  ) || 250;
-
-  addLog("🚀 Scanner started");
-
-  while(running){
-
-    checked++;
-
-    updateStats(id);
-
-    await checkGroup(id);
-
-    id++;
-
-    await new Promise(resolve =>
-      setTimeout(resolve, delay)
-    );
-
-  }
-
-}
-
-function stopScanner(){
-
-  running = false;
-
-  addLog("🛑 Scanner stopped");
-
-}
-</script>
-
+    // Welcome message
+    window.onload = () => {
+      log("👋 Roblox Group Scanner ready. Press <strong>Start Scanner</strong> to begin.", "info");
+    };
+  </script>
 </body>
 </html>
