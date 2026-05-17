@@ -16,28 +16,18 @@
       min-height: 100vh;
     }
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
 
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+    header { text-align: center; margin-bottom: 30px; }
 
     h1 {
       color: #00ff9d;
       margin: 0;
       font-size: 2.5rem;
-      text-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+      text-shadow: 0 0 20px rgba(0,255,157,0.5);
     }
 
-    .subtitle {
-      color: #888;
-      margin-top: 8px;
-    }
+    .subtitle { color: #888; margin-top: 8px; }
 
     .controls {
       background: #1a1a22;
@@ -51,16 +41,9 @@
       align-items: end;
     }
 
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    .input-group { display: flex; flex-direction: column; gap: 6px; }
 
-    label {
-      font-size: 0.9rem;
-      color: #aaa;
-    }
+    label { font-size: 0.9rem; color: #aaa; }
 
     input {
       background: #25252e;
@@ -82,29 +65,15 @@
       transition: all 0.2s;
     }
 
-    .btn-start {
-      background: #00ff9d;
-      color: black;
-    }
+    .btn-start { background: #00ff9d; color: black; }
+    .btn-start:hover { background: #00cc7a; transform: translateY(-2px); }
 
-    .btn-start:hover {
-      background: #00cc7a;
-      transform: translateY(-2px);
-    }
-
-    .btn-stop {
-      background: #ff3b5c;
-      color: white;
-    }
-
-    .btn-stop:hover {
-      background: #e02e4d;
-      transform: translateY(-2px);
-    }
+    .btn-stop { background: #ff3b5c; color: white; }
+    .btn-stop:hover { background: #e02e4d; transform: translateY(-2px); }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 15px;
       margin-bottom: 20px;
     }
@@ -117,17 +86,8 @@
       text-align: center;
     }
 
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #00ff9d;
-    }
-
-    .stat-label {
-      color: #888;
-      font-size: 0.9rem;
-      margin-top: 4px;
-    }
+    .stat-value { font-size: 2rem; font-weight: 700; color: #00ff9d; }
+    .stat-label { color: #888; font-size: 0.9rem; margin-top: 4px; }
 
     #log {
       background: #0a0a0d;
@@ -137,200 +97,183 @@
       overflow-y: auto;
       padding: 15px;
       font-family: monospace;
-      font-size: 0.95rem;
-      line-height: 1.5;
     }
 
-    .log-entry {
-      margin-bottom: 6px;
-      padding: 4px 8px;
-      border-radius: 6px;
-    }
+    .log-entry { margin-bottom: 6px; padding: 4px 8px; border-radius: 6px; }
 
-    .info {
-      color: #aaa;
-    }
+    .info { color: #aaa; }
+    .found { background: rgba(0,255,157,0.1); color: #00ff9d; border-left: 4px solid #00ff9d; }
+    .deleted { color: #ff3b5c; }
 
-    .found {
-      background: rgba(0, 255, 157, 0.1);
-      color: #00ff9d;
-      border-left: 4px solid #00ff9d;
-    }
-
-    .deleted {
-      color: #ff3b5c;
-    }
-
-    a {
-      color: #00ccff;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 30px;
-      color: #555;
-      font-size: 0.85rem;
-    }
+    a { color: #00ccff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <header>
-      <h1>Group Scanner</h1>
-      <p class="subtitle">Ultra-fast Roblox group unowned finder</p>
-    </header>
+<div class="container">
 
-    <div class="controls">
-      <div class="input-group">
-        <label for="startId">Starting Group ID</label>
-        <input type="number" id="startId" value="1" placeholder="1">
-      </div>
+<header>
+  <h1>Group Scanner</h1>
+  <p class="subtitle">Ultra-fast Roblox group unowned finder</p>
+</header>
 
-      <div class="input-group">
-        <label for="threads">Threads</label>
-        <input type="number" id="threads" value="50" placeholder="50">
-      </div>
-
-      <div>
-        <button onclick="startScanner()" class="btn-start">▶ Start Scanner</button>
-        <button onclick="stopScanner()" class="btn-stop" style="margin-left: 10px;">⏹ Stop</button>
-      </div>
-    </div>
-
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-value" id="checked">0</div>
-        <div class="stat-label">Checked</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="unowned">0</div>
-        <div class="stat-label">Unowned Found</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="current">1</div>
-        <div class="stat-label">Current ID</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="speed">0/s</div>
-        <div class="stat-label">Speed</div>
-      </div>
-    </div>
-
-    <h2 style="margin: 15px 0 10px 5px; color: #ccc;">Live Log</h2>
-    <div id="log"></div>
-
-    <div class="footer">
-      Made with ❤️ • For educational purposes
-    </div>
+<div class="controls">
+  <div class="input-group">
+    <label>Starting Group ID</label>
+    <input type="number" id="startId" value="1">
   </div>
 
-  <script>
-    const API = "https://groupapi.infodmca.com/api/check?id=";
-    let running = false;
-    let checked = 0;
-    let unowned = 0;
-    let currentId = 1;
-    let cps = 0;
+  <div class="input-group">
+    <label>Threads</label>
+    <input type="number" id="threads" value="50">
+  </div>
 
-    function log(text, cls="info") {
-      const el = document.createElement("div");
-      el.className = `log-entry ${cls}`;
-      el.innerHTML = text;
-      const logs = document.getElementById("log");
-      logs.prepend(el);
-      
-      while (logs.children.length > 300) {
-        logs.removeChild(logs.lastChild);
+  <button class="btn-start" onclick="startScanner()">▶ Start</button>
+  <button class="btn-stop" onclick="stopScanner()">⏹ Stop</button>
+</div>
+
+<div class="stats">
+  <div class="stat-card">
+    <div class="stat-value" id="checked">0</div>
+    <div class="stat-label">Checked</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-value" id="unowned">0</div>
+    <div class="stat-label">Unowned</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-value" id="locked">0</div>
+    <div class="stat-label">Locked</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-value" id="current">1</div>
+    <div class="stat-label">Current ID</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-value" id="speed">0/s</div>
+    <div class="stat-label">Speed</div>
+  </div>
+</div>
+
+<h2 style="color:#ccc;">Live Log</h2>
+<div id="log"></div>
+
+</div>
+
+<script>
+const API = "https://groupapi.infodmca.com/api/check?id=";
+
+let running = false;
+let checked = 0;
+let unowned = 0;
+let locked = 0;
+let currentId = 1;
+let cps = 0;
+
+function log(text, cls="info") {
+  const el = document.createElement("div");
+  el.className = "log-entry " + cls;
+  el.innerHTML = text;
+  const box = document.getElementById("log");
+  box.prepend(el);
+
+  while (box.children.length > 300) {
+    box.removeChild(box.lastChild);
+  }
+}
+
+function update() {
+  document.getElementById("checked").textContent = checked.toLocaleString();
+  document.getElementById("unowned").textContent = unowned.toLocaleString();
+  document.getElementById("locked").textContent = locked.toLocaleString();
+  document.getElementById("current").textContent = currentId.toLocaleString();
+}
+
+setInterval(() => {
+  document.getElementById("speed").textContent = cps + "/s";
+  cps = 0;
+}, 1000);
+
+async function check(id) {
+  try {
+    const r = await fetch(API + id);
+    const data = await r.json();
+
+    checked++;
+    cps++;
+
+    if (!data.success) return;
+
+    if (data.exists) {
+
+      if (data.unowned) {
+        unowned++;
+
+        if (data.locked) locked++;
+
+        log(
+          `✅ UNOWNED ${data.locked ? "🔒 Locked" : "🔓 Open"}<br>
+          <a href="https://www.roblox.com/groups/${id}" target="_blank">
+            ${data.name || "Unnamed Group"}
+          </a> (#${id})`,
+          "found"
+        );
       }
+
+    } else if (data.deleted) {
+      log(`❌ Deleted (#${id})`, "deleted");
     }
 
-    function update() {
-      document.getElementById("checked").textContent = checked.toLocaleString();
-      document.getElementById("unowned").textContent = unowned.toLocaleString();
-      document.getElementById("current").textContent = currentId.toLocaleString();
+    update();
+
+  } catch (e) {}
+}
+
+async function worker() {
+  while (running) {
+    const tasks = [];
+    for (let i = 0; i < 80; i++) {
+      const id = currentId++;
+      tasks.push(check(id));
     }
+    await Promise.allSettled(tasks);
+  }
+}
 
-    setInterval(() => {
-      document.getElementById("speed").textContent = cps + "/s";
-      cps = 0;
-    }, 1000);
+function startScanner() {
+  if (running) return;
 
-    async function check(id) {
-      try {
-        const r = await fetch(API + id);
-        const data = await r.json();
-        
-        checked++;
-        cps++;
-        
-        if (data.unowned) {
-          unowned++;
-          log(
-            `✅ UNOWNED → 
-            <a href="https://www.roblox.com/groups/${id}" target="_blank">
-              ${data.name || 'Unnamed Group'}
-            </a> 
-            (#${id})`,
-            "found"
-          );
-        }
-        update();
-      } catch (e) {
-        // Silently ignore errors for maximum speed
-      }
-    }
+  running = true;
+  checked = 0;
+  unowned = 0;
+  locked = 0;
 
-    async function thread() {
-      while (running) {
-        const batch = [];
-        for (let i = 0; i < 100; i++) {
-          const id = currentId++;
-          batch.push(check(id));
-        }
-        await Promise.allSettled(batch);
-      }
-    }
+  const start = parseInt(document.getElementById("startId").value);
+  currentId = isNaN(start) ? 1 : start;
 
-    function startScanner() {
-      if (running) return;
-      
-      running = true;
-      checked = 0;
-      unowned = 0;
-      
-      const startInput = parseInt(document.getElementById("startId").value);
-      currentId = isNaN(startInput) ? 1 : startInput;
-      
-      const threadCount = parseInt(document.getElementById("threads").value) || 50;
-      
-      log(`🚀 Started <strong>${threadCount}</strong> ultra-fast threads`, "info");
-      
-      for (let i = 0; i < threadCount; i++) {
-        thread();
-      }
-    }
+  const threads = parseInt(document.getElementById("threads").value) || 50;
 
-    function stopScanner() {
-      running = false;
-      log("🛑 Scanner stopped", "deleted");
-    }
+  log(`🚀 Started ${threads} threads`, "info");
 
-    // Allow pressing Enter to start
-    document.addEventListener("keypress", (e) => {
-      if (e.key === "Enter" && !running) {
-        startScanner();
-      }
-    });
+  for (let i = 0; i < threads; i++) {
+    worker();
+  }
+}
 
-    // Welcome message
-    window.onload = () => {
-      log("👋 Roblox Group Scanner ready. Press <strong>Start Scanner</strong> to begin.", "info");
-    };
-  </script>
+function stopScanner() {
+  running = false;
+  log("🛑 Stopped", "deleted");
+}
+
+window.onload = () => {
+  log("Ready. Click Start to begin.", "info");
+};
+</script>
+
 </body>
 </html>
